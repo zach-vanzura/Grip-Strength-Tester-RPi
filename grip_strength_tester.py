@@ -8,6 +8,11 @@ VOutPin = 1
 DataPin = 6
 ClockPin = 5
 NumReadings = 10
+# this is roughly 8.3 million but i think I need to reduce it by a factor of 10
+# this is the highest digital output that the ADC is capable of outputting
+MAX_STRAIN = 0x7fffff
+# optional offset constant if strain gauge is warped
+# OFFSET = 17500
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
@@ -21,16 +26,17 @@ def read_input():
     :rtype float
 
     """
-    # make sure data is ready to be read
-
     hx = HX711(dout_pin=DataPin, pd_sck_pin=ClockPin, gain=128, channel='A')
+    # rest HX711
+    hx.reset()
+
     # poll every second for an applied strain
-    # raw data is in milligrams, min is 100 grams
     strain_applied = hx.get_raw_data()
+    # raw data min is 100 grams
     min_strain_needed = 100000
-    print("Waiting for min strain needed:")
-    while max(strain_applied) < min_strain_needed:
-        print("No strain applied.")
+    # can add an offset constant if strain gauge is warped
+    while (max(strain_applied)) < min_strain_needed:
+        print("Waiting for min strain")
         time.sleep(1)
         strain_applied = hx.get_raw_data()
 
@@ -48,11 +54,17 @@ def read_input():
     for index in raw_strain_data:
         for _ in index:
             processed_data.append(_)
-    # data is in milligrams, return max in grams
+    # max output is 0x7FFFFF which is around 8.3 million
+    # since the change in voltage when strain is applied is pretty linear,
+    # the reading we get is proportional to the
+
+    # dividing by 1000 seems to get the right data in grams
+    # but could be different when using actual strain gauge
     return max(processed_data) / 1000
 
 
 if __name__ == '__main__':
     print("Reading Data")
     data = read_input()
-    print(data)
+    print(f'{data:.2f} grams')
+    print(f'Which is {data * 0.0022046} pounds')
