@@ -4,24 +4,38 @@ import RPi.GPIO as GPIO  # import GPIO
 import time
 
 # global variables for HX711
-VOutPin = 1
 DataPin = 6
 ClockPin = 5
 NumReadings = 10
-# this is roughly 8.3 million but i think I need to reduce it by a factor of 10
-# this is the highest digital output that the ADC is capable of outputting
+# this is the highest digital output that the ADC is CAPABLE of outputting
 MAX_STRAIN = 0x7fffff
-# optional offset constant if strain gauge is warped
-# OFFSET = 17500
+# optional offset constant if strain gauge is warped( baseline numbers aren't close to 0)
+# baseline output for 120 kg strain gauge is in the range of 155,000 - 163,000
+OFFSET = 162000
+# this is the max the ADC outputs with maximum strain applied
+MAX_OUTPUT = 2637362.7362
+MAX_STRAIN_KGS = 120
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
+"""
+
+NOTE: Calibration for your load cell will vary depending on its rated range.
+for a 120 kg load cell, we are using Zach's grip strength of about 100 pounds, or about 45.4 kg as a reference
+to calculate the max output from the chip you must find the ratio of your measurement to the maximum strain capacity
+the output for Zach's grip is 1,160,668, accounting for the offset of about 160,000,
+45.5 / 120 = 1,000,000 / max raw output. which comes out to be roughly 2,637,362.7362
+
+Finally, to calculate the strain in KGs, one simply takes the ratio of measured output (minus offset) to the maximum output 
+and multiplies by the maximum strain rating
+
+"""
 
 def read_input():
     """
     - read input from load cell
-    - polls every second for a minimum strain level of 100 grams before reading data
-    - reads data for 5 seconds
+    - polls every second for a minimum strain level before reading data
+    - reads data while strain is still applied
     :return the max of the aggregate of readings
     :rtype float
 
@@ -30,41 +44,30 @@ def read_input():
     # rest HX711
     hx.reset()
 
-    # poll every second for an applied strain
-    strain_applied = hx.get_raw_data()
-    # raw data min is 100 grams
-    min_strain_needed = 100000
-    # can add an offset constant if strain gauge is warped
-    while (max(strain_applied)) < min_strain_needed:
+    # poll every second for an applied strain. Don't need more than one read
+    strain_applied = hx.get_raw_data(1)
+    # min strain is a bit higher than the offset  because it can vary a little bit depending on the handle position
+    min_strain_needed = 200000
+    while (strain_applied[0]) < min_strain_needed:
         print("Waiting for min strain")
         time.sleep(1)
-        strain_applied = hx.get_raw_data()
+        strain_applied = hx.get_raw_data(1)
 
     raw_strain_data = []
-    # read data for 5 seconds
-    print("Reading strain.")
-    end_time = time.time() + 5
+    # read data while strain is high enough
+    print("Min Strain has been achieved.")
+    strain_applied.get_raw_data(1)
     # maximize readings by processing after 5 seconds
-    while time.time() < end_time:
-        read = hx.get_raw_data()
-        # get_raw_data returns a list, add each value to strain_data to prevent a list of lists
-        raw_strain_data.append(read)
-    # raw_strain_data is a list of lists, process to get one full list of data
-    processed_data = []
-    for index in raw_strain_data:
-        for _ in index:
-            processed_data.append(_)
-    # max output is 0x7FFFFF which is around 8.3 million
-    # since the change in voltage when strain is applied is pretty linear,
-    # the reading we get is proportional to the
+    while strain_applied[0] > min_strain_needed:
+        read = hx.get_raw_data(1)
+        raw_strain_data.append(read[0])
 
-    # dividing by 1000 seems to get the right data in grams
-    # but could be different when using actual strain gauge
-    return max(processed_data) / 1000
+    # account for offset, divide by load cell max output then multiply by max load capacity
+    output_data = ((max(raw_strain_data) - OFFSET) / MAX_OUTPUT) * MAX_STRAIN_KGS
+    return output_data
 
 
 if __name__ == '__main__':
-    print("Reading Data")
     data = read_input()
-    print(f'{data:.2f} grams')
-    print(f'Which is {data * 0.0022046} pounds')
+    print(f'{data:.2f} kilograms')
+    print(f'Which is {(data * 2.2046):.2f} pounds')
