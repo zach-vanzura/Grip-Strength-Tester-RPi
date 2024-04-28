@@ -37,10 +37,10 @@ def read_input():
 
     raw_strain_data = []
     # read data while strain is high enough
-    print("Min Strain has been achieved. \n")
+    print("Min Strain has been achieved.")
 
     strain_applied = hx.get_raw_data()
-    while strain_applied > min_strain_needed:
+    while max(strain_applied) > min_strain_needed:
         raw_strain_data.append(max(strain_applied))
         strain_applied = hx.get_raw_data()
 
