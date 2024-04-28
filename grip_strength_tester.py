@@ -37,16 +37,12 @@ def read_input():
 
     raw_strain_data = []
     # read data while strain is high enough
-    print("Min Strain has been achieved. \n"
-          "Squeeze for 3 seconds.")
+    print("Min Strain has been achieved. \n")
 
-    start_time = time.time()
-    end_time = start_time + 3
-
-    # maximize readings by processing after 3 seconds
-    while time.time() < end_time:
-        read = hx.get_raw_data()
-        raw_strain_data.append(max(read))
+    strain_applied = hx.get_raw_data()
+    while strain_applied > min_strain_needed:
+        raw_strain_data.append(max(strain_applied))
+        strain_applied = hx.get_raw_data()
 
     # account for offset, divide by load cell max output then multiply by max load capacity
     output_data = ((max(raw_strain_data) - OFFSET) / MAX_OUTPUT) * MAX_STRAIN_KGS
