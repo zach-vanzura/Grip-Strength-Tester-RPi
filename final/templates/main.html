@@ -48,11 +48,23 @@
                url: '/update_progress',
 	       type: 'GET',
 	       success: function(data) {
-		   var out1 = document.getElementById("output1");
-		   var progress = data.progress;
-		   var prog = document.getElementById("myProgress");
-		   prog.value = progress;
-		   out1.innerHTML = progress;
+		   if (pkg == 1) {
+		   	var progress = data.progress;
+			Math.round(progress * 100) / 100;
+		   	var prog = document.getElementById("myProgress");
+		   	prog.value = progress;
+		   	var out1 = document.getElementById("output1");
+		   	out1.innerHTML = progress + " kgs";
+		   }
+		   else {
+		   	var progress = data.progress;
+			progress = progress * 2.2046;
+			Math.round(progress * 100) / 100;
+		   	var prog = document.getElementById("myProgress");
+		   	prog.value = progress;
+		   	var out1 = document.getElementById("output1");
+		   	out1.innerHTML = progress + " lbs";
+		   }
 	       },
 	       error: function(){
 		   console.log('Error occured');
