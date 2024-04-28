@@ -48,8 +48,3 @@ def read_input():
     output_data = ((max(raw_strain_data) - OFFSET) / MAX_OUTPUT) * MAX_STRAIN_KGS
     return output_data
 
-
-if __name__ == '__main__':
-    data = read_input()
-    print(f'{data:.2f} kilograms')
-    print(f'Which is {(data * 2.2046):.2f} pounds')
