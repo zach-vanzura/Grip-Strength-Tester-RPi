@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{{title}}</title>
+
+	<link rel="stylesheet" href='/static/style.css'/>
+    </head>
+   
+     <body>
+        <h1 style="text-align:center">Zach and Charlie’s Super Awesome and Cool Computer Organization Group</h1>
+        <h2 style="text-align:center">Final Project - Grip Strength Tracker</h2>
+     </body>
+
+     <body>
+	<div class="container">
+	    <button id="button2" onclick="setKg()">Use Kilograms</button>
+	    <button id="button2" onclick="setLb()">Use Pounds</button>
+	</div>
+
+	<div>
+	    <progress id="myProgress" value="0" max="100"></progress>
+	</div>
+	
+	<div class="container" >
+	    <button id="button1"  onclick="updateProgress()">Press me</button>
+	</div>
+
+	<div id="solidText" style="text-align: center">Your Grip Strength Is: </div>
+	<div class="output"  style="text-align: center; margin-top:25px" id="output1"></div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     </body> 
+
+     <script>
+	var pkg = 0;
+
+	setKg() {
+	    pkg = 1;
+	}
+
+	setLb() {
+	    pkg = 0;
+	}    
+
+	function updateProgress() {
+            $.ajax({
+               url: '/update_progress',
+	       type: 'GET',
+	       success: function(data) {
+		   var out1 = document.getElementById("output1");
+		   var progress = data.progress;
+		   var prog = document.getElementById("myProgress");
+		   prog.value = progress;
+		   out1.innerHTML = progress;
+	       },
+	       error: function(){
+		   console.log('Error occured');
+	       }
+	     });
+	}
+     </script>
+</html>
+	

@@ -1,0 +1,49 @@
+html{
+    background-color: black;
+    color: #39FF14;
+}
+
+.container {
+    text-align: center;
+}
+
+#button1 {
+    background-color: black;
+    color: #39FF14;
+    font-size: 24px;
+    padding: 14px 40px;
+    border: 2px solid #39FF14;
+    margin-bottom: 20px;
+}
+
+#button2 {
+    background-color: black;
+    color: #39FF14;
+    font-size: 18px;
+    padding: 10px 30px;
+    border: 2px solid #39FF14;
+    margin-bottom: 25px;
+    margin-right: 10px;
+}
+
+#myProgress {
+    margin-bottom: 25px;
+    width: 100%;
+    background-color: green;
+    height: 30px;
+}
+
+.progress-numbers {
+    top: 0;
+    left: -10%; /* Adjust as needed */
+}
+
+.progress-numbers.right {
+    left: 90%; /* Align to the right of the progress bar */
+}
+
+body{
+    margin: auto;
+    padding: 3%;
+    width: 90%;
+}
