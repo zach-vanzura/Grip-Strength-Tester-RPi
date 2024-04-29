@@ -4,8 +4,8 @@ import random
 from grip_strength_tester import read_input
 
 streamer = Streamer(
-    bucket_name="FT",
-    bucket_key="UUNP4VCRQJV7",
+    bucket_name="KG",
+    bucket_key="REEQFQN4KYAU",
     access_key="ist_e5y21RVgoiT_lMfkC1wgrb85Y_DtStmi"
 )
 
@@ -18,6 +18,6 @@ def main():
 @app.route('/update_progress')
 def get_progress():
     progress = read_input()
-    streamer.log("FT", progress)
+    streamer.log("KG", progress)
     streamer.flush()
     return jsonify({'progress': progress})
