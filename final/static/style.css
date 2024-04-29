@@ -16,6 +16,11 @@ html{
     margin-bottom: 20px;
 }
 
+#button1:active {
+    background-color: #39FF14;
+    color: black;
+}    
+
 #button2 {
     background-color: black;
     color: #39FF14;
