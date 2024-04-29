@@ -56,16 +56,15 @@
 		   var progress = data.progress;
 		   var prog = document.getElementById("myProgress");
 		   var out1 = document.getElementById("output1");
+		   prog.value = progress;
 	
 		   if (pkg == 1) {
 			progress = Math.round(progress * 100) / 100;
-		   	prog.value = progress;
 		   	out1.innerHTML = progress + " kgs";
 		   }
 		   if else (pkg == 0) {
 			progress = progress * 2.2046;
 			progress = Math.round(progress * 100) / 100;
-		   	prog.value = progress;
 		   	out1.innerHTML = progress + " lbs";
 		   }
 	       },
