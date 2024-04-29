@@ -26,6 +26,11 @@ html{
     margin-right: 10px;
 }
 
+#button2:active {
+    background-color: #39FF14;
+    color: black;
+}    
+
 #myProgress {
     margin-bottom: 25px;
     width: 100%;
