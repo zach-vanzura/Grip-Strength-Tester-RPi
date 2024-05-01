@@ -57,3 +57,33 @@ body{
     padding: 3%;
     width: 90%;
 }
+
+input[type=text] {
+    background-color: black;
+    color: #39FF14;
+    border: 2px solid #39FF14;
+}
+
+table, th, td {
+    border: 1px solid;
+}
+
+thead {
+    background-color: #39FF14;
+    color: black;
+}
+
+table {
+    width: 100%;
+}
+
+.nav-link:hover {
+    color: black;
+    background-color: #39FF14;
+}
+
+.nav-link {
+    color: #39FF14;
+    background-color: black;    
+}
+
