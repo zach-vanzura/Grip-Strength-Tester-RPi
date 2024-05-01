@@ -8,6 +8,11 @@
     </head>
    
      <body>
+	<nav class="container">
+      	    <ul class="navbar-nav">
+                <a class="nav-link" href="/table">Grip Strength Log</a>
+            </ul>
+        </nav>
         <h1 style="text-align:center">Zach and Charlie’s Super Awesome and Cool Computer Organization Group</h1>
         <h2 style="text-align:center">Final Project - Grip Strength Tester</h2>
      </body>
@@ -22,6 +27,13 @@
 	    <button id="button2" onclick="setLb()">Use Pounds</button>
 	</div>
 
+	<div class="container">
+            <form id="nameForm">
+                <label for="nameInput">Enter your name:</label>
+                <input type="text" id="nameInput" name="nameInput">
+            </form>
+        </div>
+
 	<div>
 	    <progress id="myProgress" value="0" max="100"></progress>
 	</div>
@@ -31,7 +43,7 @@
         		<p class="progress-numbers">0 kgs/lbs</p>
     		</div>
     		<div style="flex-grow: 1; text-align: right;">
-        		<p class="progress-numbers.right">120 kgs/ 265 lbs</p>
+        		<p class="progress-numbers.right">100 kgs/ 220 lbs</p>
    		 </div>
 	</div>
 	
@@ -57,9 +69,11 @@
 	}    
 
 	function updateProgress() {
+	   var name = document.getElementById("nameInput").value;
             $.ajax({
                url: '/update_progress',
 	       type: 'GET',
+	       data: {name: name},
 	       success: function(data) {
 		   var progress = data.progress;
 		   var prog = document.getElementById("myProgress");
@@ -70,7 +84,7 @@
 			progress = Math.round(progress * 100) / 100;
 		   	out1.innerHTML = progress + " kgs";
 		   }
-		   if else (pkg == 0) {
+		   else {
 			progress = progress * 2.2046;
 			progress = Math.round(progress * 100) / 100;
 		   	out1.innerHTML = progress + " lbs";
@@ -84,3 +98,4 @@
      </script>
 </html>
 	
+
