@@ -6,7 +6,7 @@ import time
 # global variables for HX711
 DataPin = 6
 ClockPin = 5
-OFFSET = 157550
+OFFSET = 157550  # accounts for the "tared" value readings when no strain is applied
 # maximum output value using a 120 kg load cell
 MAX_OUTPUT = 2681856.82
 MAX_STRAIN_KGS = 120
